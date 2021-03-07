@@ -1,0 +1,70 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: nokia-stack-service
+  name: nokia-stack-service
+  namespace: default
+spec:
+  replicas: 1 #CAN BE CHANGED
+  minReadySeconds: 45
+  selector:
+    matchLabels:
+      app: nokia-stack-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nokia-stack-service
+    spec:
+      containers:
+      - name: nokia-stack-service
+        image: ruhan008/nokia-stack-service
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: liveness-port
+          containerPort: 8100
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi
+          limits:
+            cpu: 400m
+            memory: 256Mi
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: liveness-port
+          failureThreshold: 5
+          periodSeconds: 10
+          initialDelaySeconds: 60
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: liveness-port
+          failureThreshold: 5
+          periodSeconds: 10
+          initialDelaySeconds: 60
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels: #PODS
+    app: nokia-stack-service
+  name: nokia-stack-service
+  namespace: default
+spec:
+  ports:
+    port: 8100 #CHANGE
+    protocol: TCP
+    targetPort: 8100 #CHANGE
+  selector:
+    app: nokia-stack-service
+  sessionAffinity: None #CHANGE
+  type: LoadBalancer

@@ -1,0 +1,9 @@
+spring:
+  application:    name: nokia-stack-service
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: nokia-stack-service
+server:  port: 8100
+management:  endpoint:    health:      probes:        enabled: true
