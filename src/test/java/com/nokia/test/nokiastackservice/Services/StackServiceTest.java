@@ -49,5 +49,5 @@ class StackServiceTest {
 						new Stack("12", "Afsah", 20), new Stack("13", "Saumya", 25)).collect(Collectors.toList()));
 		assertEquals(4, service.getAllUsersMethod().size());
 	}
-
+	
 }

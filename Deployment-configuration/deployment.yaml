@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: nokia-stack-service
-        image: ruhan008/nokia-stack-service
+        image: ruhan008/nokia-stack-service:0.0.1.RELEASE
         imagePullPolicy: IfNotPresent
         ports:
         - name: liveness-port
@@ -61,9 +61,9 @@ metadata:
   namespace: default
 spec:
   ports:
-    port: 8100 #CHANGE
-    protocol: TCP
-    targetPort: 8100 #CHANGE
+    - port: 8100 #CHANGE
+      protocol: TCP
+      targetPort: 8100 #CHANGE
   selector:
     app: nokia-stack-service
   sessionAffinity: None #CHANGE
