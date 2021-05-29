@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nokia.test.nokiastackservice.Exceptions.StackEmptyException;
 import com.nokia.test.nokiastackservice.Models.Stack;
+
 import com.nokia.test.nokiastackservice.Services.StackService;
 
 @RestController
@@ -24,7 +26,7 @@ public class StackController {
 
 	@RequestMapping("/hello")
 	public String sayHello() {
-		return "Welcome to Nokia Stack Service";
+		return "Welcome to Nokia Stack Service - Original";
 	}
 
 	@PostMapping("/push")
@@ -35,7 +37,12 @@ public class StackController {
 
 	@DeleteMapping("/pop")
 	public ResponseEntity<Stack> deleteLastAddedUser() {
-		service.deleteUserMethod();
+		try {
+			service.deleteUserMethod();
+		} catch (ArrayIndexOutOfBoundsException e) {
+//			throw new Exception("Stack is empty");
+			throw new StackEmptyException("Stack is empty");
+		}
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
